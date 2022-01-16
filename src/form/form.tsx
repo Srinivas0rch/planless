@@ -1,18 +1,23 @@
 import { Button, TextField } from '@material-ui/core';
 import React, { FC, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Task } from 'uiTypes';
 import { todosRef } from '../firebase.config';
 
 const Form:FC = () => {
     const [value, setValue] = useState("");
+    const dispatch = useDispatch();
 
         // move to redux # context of use is not reliable.
         const createTodo = (e: React.FormEvent<EventTarget>) => {
             e.preventDefault();
-            const item = {
-              task: value,
+            const task:Task = {
+              title: value,
+              dueDate: new Date(),
               done: false,
             };
-            todosRef.push(item).then(r => console.log('--r', r));
+            //dispatch(createTasks(task))
+
           };
 
         return(

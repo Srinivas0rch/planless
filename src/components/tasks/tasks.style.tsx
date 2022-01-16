@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
     },
     marked: {
         textDecoration: 'line-through'
-    }
+    },
 }));
 
 export default useStyles;

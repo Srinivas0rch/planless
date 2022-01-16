@@ -1,28 +1,50 @@
 import { AppState } from '../../reducer/root-reducer';
-import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { Status } from 'uiTypes';
-import {todosRef} from "../../../firebase.config";
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
+import { Status, Task, TasksState } from 'uiTypes';
+import { todosRef } from "../../../firebase.config";
 
 export interface Firebase {
-  tasks?: any[];
+  tasks?: TasksState;
   status: Status;
   error?: string;
 }
 
+/*
+getTasks(state: Firebase) {
+      todosRef.on('value', (snapshot) => {
+        let items = snapshot.val();
+        let newState: Task[] = [];
+        for (let item in items) {
+          newState.push({
+            id: item,
+            title: items[item].title,
+            done: items[item].done,
+            dueDate: items[item].dueDate
+          });
+        }
+        console.log('redux items', newState)
+        state.tasks = snapshot.val();
+      });
+    },
+    createTasks(state: Firebase, action) {
+      todosRef.push(action.payload).then(r => {
+        console.log('--r', r)
+      });
+    }
+*/
+
 const initialState: Firebase = { status: 'idle' };
+
 
 export const firebaseSlice = createSlice({
   name: 'firebase',
   initialState,
   reducers: {
-    getTasks  (state: Firebase){},
-    createTasks  (state: Firebase, action){
-      const item = action.payload
-      todosRef.push(item).then( r => {
-
-      });
+    setFirebaseData (state:Firebase, action){
+      state.tasks = action.payload;
+      state.status = 'fulfilled';
     }
-  },
+  }
 });
 
 export const tasksSelector = createSelector(
@@ -30,5 +52,6 @@ export const tasksSelector = createSelector(
   (firebase) => firebase.tasks
 );
 
-export const { getTasks, createTasks } = firebaseSlice.actions;
+export const { setFirebaseData } = firebaseSlice.actions;
+
 export default firebaseSlice.reducer;
