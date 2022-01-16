@@ -1,16 +1,18 @@
 import React, { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { Button, FormControl, TextField } from '@material-ui/core';
-import { Task } from 'uiTypes';
 import cardStyles from "./cardEdit.style";
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { firebaseSave } from '../../redux/firebase';
+import { Task } from 'uiTypes';
 
 interface CardEdit {
-  onClose : Dispatch<SetStateAction<boolean>>
+  onClose : Dispatch<SetStateAction<boolean>>;
+  done: boolean;
 }
 
-const CardEdit:FC<CardEdit> = ({onClose}) => {
+const CardEdit:FC<CardEdit> = ({onClose, done}) => {
 
     const styles = cardStyles();
     const [title, setTitle] = useState<string>("");
@@ -28,6 +30,17 @@ const CardEdit:FC<CardEdit> = ({onClose}) => {
       onClose(false)
     }
 
+    const saveCard = async () => {
+      const _card:Task = {
+        id : 1,
+        title :  title,
+        done : done ? done : false,
+        dueDate : date
+      }
+      await firebaseSave(_card)
+      onClose(false)
+    }
+
     return (
       <div>
         <div className={styles.card}>
@@ -36,7 +49,9 @@ const CardEdit:FC<CardEdit> = ({onClose}) => {
           label="title"
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value)
+          }}
           InputLabelProps={{ shrink: true }}
         />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -52,7 +67,7 @@ const CardEdit:FC<CardEdit> = ({onClose}) => {
 
         </div>
         <span className={styles.actions}>
-            <Button className={styles.button}>Save</Button>
+            <Button className={styles.button} onClick={saveCard}>Save</Button>
             <Button className={styles.button} onClick={closeEdit}>Cancel</Button>
         </span>
         </div>

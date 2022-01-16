@@ -6,7 +6,7 @@ declare module "uiTypes" {
     id?:any;
     firebaseId?:string;
     title: string;
-    dueDate?: Date | string;
+    dueDate?: Date | string | null;
     done: boolean;
     position?: number;
     column?: number;

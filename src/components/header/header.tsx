@@ -16,7 +16,7 @@ const Header:FC<HeaderProps> = ({ title }) => {
     <div className={styles.header}>
         <div className={styles.title}>{title}</div>
         {editMode ? (
-        <CardEdit onClose={setEditMode} />
+        <CardEdit onClose={setEditMode} done={ title === 'completed'} />
       ) : (
         <button type='button' onClick={() => setEditMode(true)} className={styles.button}>Add Card</button>
       )}
